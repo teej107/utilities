@@ -40,16 +40,16 @@ var _ = {};
     // Accepts both arrays and objects.
     _.each = function (collection, iterator)
     {
-        if(collection instanceof Array)
+        if (collection instanceof Array)
         {
-            for(var i = 0; i < collection.length; i++)
+            for (var i = 0; i < collection.length; i++)
             {
                 iterator(collection[i], i, collection);
             }
         }
         else
         {
-            for(var e in collection)
+            for (var e in collection)
             {
                 iterator(collection[e], e, collection);
             }
@@ -60,9 +60,9 @@ var _ = {};
     // is not present in the array.
     _.indexOf = function (array, target)
     {
-        for(var i = 0; i < array.length; i++)
+        for (var i = 0; i < array.length; i++)
         {
-            if(array[i] === target)
+            if (array[i] === target)
                 return i;
         }
         return -1;
@@ -71,22 +71,65 @@ var _ = {};
     // Return all elements of an array that pass a truth test ('iterator' function argument)
     _.filter = function (collection, iterator)
     {
+        var value = [];
+        for (var i = 0; i < collection.length; i++)
+        {
+            if (iterator(collection[i]))
+            {
+                value.push(collection[i]);
+            }
+        }
+        return value;
     };
 
     // Return all elements of an array that don't pass a truth test (the 'iterator' function argument)
     _.reject = function (collection, iterator)
     {
+        var value = [];
+        for (var i = 0; i < collection.length; i++)
+        {
+            if (!iterator(collection[i]))
+            {
+                value.push(collection[i]);
+            }
+        }
+        return value;
     };
 
     // Produce a duplicate-free version of the array.
     _.uniq = function (array)
     {
+        var contains = function (arr, e)
+        {
+            for (var i = 0; i < arr.length; i++)
+            {
+                if (arr[i] === e)
+                    return true;
+            }
+            return false;
+        };
+
+        var value = [];
+        for (var i = 0; i < array.length; i++)
+        {
+            if (!contains(value, array[i]))
+            {
+                value.push(array[i]);
+            }
+        }
+        return value;
     };
 
 
     // Return the results of applying an iterator to each element.
     _.map = function (array, iterator)
     {
+        var value = [];
+        array.forEach(function (e)
+        {
+            value.push(iterator(e));
+        });
+        return value;
     };
 
     // Takes an array of objects and returns and array of the values of
@@ -94,11 +137,24 @@ var _ = {};
     // an array of just their ages
     _.pluck = function (array, propertyName)
     {
+        var value = [];
+        for (var i = 0; i < array.length; i++)
+        {
+            value.push(array[i][propertyName]);
+        }
+        return value;
     };
 
     // Calls the method named by methodName on each value in the list.
     _.invoke = function (list, methodName, args)
     {
+        var value = [];
+        for (var i = 0; i < list.length; i++)
+        {
+            var fn = methodName instanceof Function ? methodName : list[i][methodName];
+            value.push(fn.apply(fn.apply(list[i], args)));
+        }
+        return value;
     };
 
     // Reduces an array or object to a single value by repetitively calling
@@ -111,6 +167,7 @@ var _ = {};
     // Determine if the array or object contains a given value (using `===`).
     _.contains = function (collection, target)
     {
+
     };
 
 
