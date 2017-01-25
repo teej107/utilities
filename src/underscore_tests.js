@@ -162,24 +162,88 @@ var _ = {};
     // the return value of the previous iterator call.
     _.reduce = function (collection, iterator, initialValue)
     {
+        var previous = initialValue === undefined ? 0 : initialValue;
+        var makeValue = function (e)
+        {
+            previous = iterator(previous, e);
+        };
+        if(collection instanceof Array)
+        {
+            for(var i = 0; i < collection.length; i++)
+            {
+                makeValue(collection[i]);
+            }
+        }
+        else
+        {
+            for(var e in collection)
+            {
+                makeValue(e);
+            }
+        }
+        return previous;
     };
 
     // Determine if the array or object contains a given value (using `===`).
     _.contains = function (collection, target)
     {
-
+        if(collection instanceof Array)
+        {
+            for(var i = 0; i < collection.length; i++)
+            {
+                if(collection[i] === target)
+                    return true;
+            }
+        }
+        else
+        {
+            for(var e in collection)
+            {
+                if(collection[e] === target)
+                    return true;
+            }
+        }
+        return false;
     };
 
 
     // Determine whether all of the elements match a truth test.
     _.every = function (collection, iterator)
     {
+        if(iterator === undefined)
+        {
+            iterator = function (e)
+            {
+                return e;
+            }
+        }
+        var value = true;
+        collection.forEach(function (e)
+        {
+            if(!iterator(e))
+                value = false;
+        })
+        return value;
     };
 
     // Determine whether any of the elements pass a truth test. If no iterator is
     // provided, provide a default one
     _.some = function (collection, iterator)
     {
+        if(iterator === undefined)
+        {
+            iterator = function (e)
+            {
+                return e;
+            }
+        }
+        var value = false;
+        collection.forEach(function (e)
+        {
+            if(iterator(e))
+                value = true;
+        })
+        return value;
     };
 
 
@@ -194,6 +258,7 @@ var _ = {};
     // object(s).
     _.extend = function (obj)
     {
+
     };
 
     // Like extend, but doesn't ever overwrite a key that already
